@@ -1,0 +1,58 @@
+{
+	"name": "@three-ws/audio-mcp",
+	"version": "0.1.0",
+	"mcpName": "io.github.nirholas/audio-mcp",
+	"description": "Give 3D AI agents a voice and a face from any MCP client — text-to-speech, speech-to-text, audio-to-face lipsync (ARKit blendshapes), and the motion-capture clip library. Read-only over the live three.ws API; free NVIDIA lanes, no key required.",
+	"type": "module",
+	"author": "nirholas <support@three.ws>",
+	"license": "SEE LICENSE IN LICENSE",
+	"homepage": "https://three.ws",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/nirholas/audio-mcp.git"
+	},
+	"bugs": {
+		"url": "https://github.com/nirholas/three.ws/issues"
+	},
+	"keywords": [
+		"mcp",
+		"three.ws",
+		"tts",
+		"text-to-speech",
+		"speech-to-text",
+		"asr",
+		"lipsync",
+		"audio2face",
+		"blendshapes",
+		"motion-capture",
+		"avatar"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"files": [
+		"src",
+		"server.json",
+		"README.md",
+		"LICENSE"
+	],
+	"bin": {
+		"audio-mcp": "src/index.js"
+	},
+	"main": "./src/index.js",
+	"exports": {
+		".": "./src/index.js"
+	},
+	"engines": {
+		"node": ">=20"
+	},
+	"scripts": {
+		"start": "node src/index.js",
+		"test": "node --test \"test/**/*.test.mjs\"",
+		"inspect": "npx -y @modelcontextprotocol/inspector node src/index.js"
+	},
+	"dependencies": {
+		"@modelcontextprotocol/sdk": "^1.29.0",
+		"zod": "^3.23.8"
+	}
+}

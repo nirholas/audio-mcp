@@ -1,0 +1,73 @@
+// Tool-surface invariants for @three-ws/audio-mcp.
+//
+// Importing src/index.js is side-effect-free: the stdio transport only
+// connects when the file is the process entry point, and buildServer() needs
+// no key or signer. These tests run offline — they never touch the network.
+//
+// Run: node --test packages/audio-mcp/test/registration.test.mjs
+
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+
+import { TOOLS, buildServer } from '../src/index.js';
+
+const EXPECTED_NAMES = [
+	'text_to_speech',
+	'speech_to_text',
+	'audio_to_face',
+	'motion_capture_clips',
+	'motion_capture_clip',
+];
+
+test('exactly the expected tools are registered', () => {
+	assert.equal(TOOLS.length, 5);
+	assert.deepEqual(new Set(TOOLS.map((t) => t.name)), new Set(EXPECTED_NAMES));
+});
+
+test('every tool has a title, description, input schema and complete annotations', () => {
+	for (const tool of TOOLS) {
+		assert.equal(typeof tool.title, 'string', `${tool.name} is missing a title`);
+		assert.ok(tool.title.length > 0, `${tool.name} has an empty title`);
+		assert.equal(typeof tool.description, 'string', `${tool.name} is missing a description`);
+		assert.ok(tool.description.length > 0, `${tool.name} has an empty description`);
+		assert.ok(tool.inputSchema && typeof tool.inputSchema === 'object', `${tool.name} is missing inputSchema`);
+		assert.equal(typeof tool.handler, 'function', `${tool.name} is missing a handler`);
+		assert.ok(tool.annotations, `${tool.name} is missing MCP ToolAnnotations`);
+		assert.equal(typeof tool.annotations.readOnlyHint, 'boolean', `${tool.name} must set readOnlyHint`);
+		assert.equal(typeof tool.annotations.idempotentHint, 'boolean', `${tool.name} must set idempotentHint`);
+		assert.equal(typeof tool.annotations.openWorldHint, 'boolean', `${tool.name} must set openWorldHint`);
+	}
+});
+
+test('every tool is a read-only, live-data transform', () => {
+	for (const tool of TOOLS) {
+		// These tools synthesize/recognize audio or read the clip library — they
+		// transform input or read live data, never mutating platform state.
+		assert.equal(tool.annotations.readOnlyHint, true, `${tool.name} should be read-only`);
+		assert.equal(tool.annotations.openWorldHint, true, `${tool.name} talks to a live service`);
+		// Live synthesis/recognition/library reads are never idempotent — the
+		// audio bytes, transcript, and catalog move between calls.
+		assert.equal(tool.annotations.idempotentHint, false, `${tool.name} is not idempotent`);
+	}
+});
+
+test('read-only tools do not set destructiveHint (spec ignores it when readOnlyHint is true)', () => {
+	for (const tool of TOOLS) {
+		assert.equal(
+			tool.annotations.destructiveHint,
+			undefined,
+			`${tool.name} is read-only — destructiveHint should be omitted`,
+		);
+	}
+});
+
+test('buildServer registers every tool with its annotations, without a signer', () => {
+	const server = buildServer();
+	const registered = server._registeredTools;
+	assert.ok(registered, 'McpServer should expose its tool registry');
+	for (const tool of TOOLS) {
+		const entry = registered[tool.name];
+		assert.ok(entry, `${tool.name} not registered on the server`);
+		assert.deepEqual(entry.annotations, tool.annotations, `${tool.name} annotations must survive registration`);
+	}
+});
