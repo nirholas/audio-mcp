@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: three.ws platform support
+    url: https://three.ws
+    about: Questions about the hosted platform rather than this package.
+  - name: Security report
+    url: https://github.com/nirholas/audio-mcp/security/advisories/new
+    about: Report a vulnerability privately.

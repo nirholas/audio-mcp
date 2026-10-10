@@ -1,0 +1,4 @@
+Contact: mailto:support@three.ws
+Preferred-Languages: en
+Canonical: https://nirholas.github.io/audio-mcp/.well-known/security.txt
+Expires: 2027-10-10T21:59:47.549Z

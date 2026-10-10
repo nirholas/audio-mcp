@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it as below.
+title: "@three-ws/audio-mcp"
+abstract: "Give 3D AI agents a voice and a face from any MCP client — text-to-speech, speech-to-text, audio-to-face lipsync (ARKit blendshapes), and the motion-capture clip library. Read-only over the live three.ws API; free NVIDIA lanes, no key required."
+version: 0.1.3
+license: Apache-2.0
+repository-code: "https://github.com/nirholas/audio-mcp"
+url: "https://three.ws"
+authors:
+  - name: three.ws
+    website: "https://three.ws"
