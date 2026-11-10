@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "audio": {
+      "command": "npx",
+      "args": ["-y", "@three-ws/audio-mcp"],
+      "env": {
+        "THREE_WS_API_KEY": "${THREE_WS_API_KEY:-}"
+      }
+    }
+  }
+}
